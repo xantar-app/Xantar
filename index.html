@@ -1,0 +1,209 @@
+-- ============================================
+-- XANTAR — Schema SQL para Supabase
+-- Copia todo este contenido y pégalo en
+-- Supabase > SQL Editor > New query
+-- Luego pulsa "Run"
+-- ============================================
+
+-- PROFILES
+create table if not exists profiles (
+  id uuid references auth.users on delete cascade primary key,
+  username text unique,
+  nombre text,
+  ciudad text,
+  email text,
+  avatar_url text,
+  bio text,
+  is_owner boolean default false,
+  created_at timestamptz default now()
+);
+alter table profiles enable row level security;
+create policy "Perfiles públicos" on profiles for select using (true);
+create policy "Usuario actualiza su perfil" on profiles for update using (auth.uid() = id);
+create policy "Usuario crea su perfil" on profiles for insert with check (auth.uid() = id);
+
+-- RESTAURANTS
+create table if not exists restaurants (
+  id bigserial primary key,
+  name text not null,
+  country text,
+  region text,
+  province text,
+  city text,
+  spec text,
+  rating numeric default 0,
+  reviews int default 0,
+  michelin int default 0,
+  repsol int default 0,
+  img text,
+  hero_img text,
+  chef text,
+  horario text,
+  price text,
+  tags text[],
+  followers int default 0,
+  added_by uuid references profiles(id),
+  added_by_username text,
+  lat numeric,
+  lng numeric,
+  maps text,
+  web text,
+  phone text,
+  verified boolean default false,
+  created_at timestamptz default now()
+);
+alter table restaurants enable row level security;
+create policy "Restaurantes públicos" on restaurants for select using (true);
+create policy "Usuarios añaden restaurantes" on restaurants for insert with check (auth.uid() is not null);
+create policy "Propietario actualiza" on restaurants for update using (auth.uid() = added_by);
+
+-- SLOTS
+create table if not exists slots (
+  id bigserial primary key,
+  restaurant_id bigint references restaurants(id) on delete cascade,
+  date date not null,
+  time time not null,
+  pax int default 2,
+  notes text,
+  available boolean default true,
+  created_at timestamptz default now()
+);
+alter table slots enable row level security;
+create policy "Slots públicos" on slots for select using (true);
+create policy "Propietario crea slots" on slots for insert with check (auth.uid() is not null);
+
+-- POSTS
+create table if not exists posts (
+  id bigserial primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  username text,
+  avatar_url text,
+  restaurant_id bigint references restaurants(id),
+  restaurant_name text,
+  img text not null,
+  type text default 'photo',
+  caption text,
+  likes_count int default 0,
+  created_at timestamptz default now()
+);
+alter table posts enable row level security;
+create policy "Posts públicos" on posts for select using (true);
+create policy "Usuarios crean posts" on posts for insert with check (auth.uid() = user_id);
+
+-- LIKES
+create table if not exists likes (
+  id bigserial primary key,
+  post_id bigint references posts(id) on delete cascade,
+  user_id uuid references profiles(id) on delete cascade,
+  created_at timestamptz default now(),
+  unique(post_id, user_id)
+);
+alter table likes enable row level security;
+create policy "Likes públicos" on likes for select using (true);
+create policy "Usuarios dan like" on likes for insert with check (auth.uid() = user_id);
+create policy "Usuarios quitan like" on likes for delete using (auth.uid() = user_id);
+
+-- COMMENTS
+create table if not exists comments (
+  id bigserial primary key,
+  post_id bigint references posts(id) on delete cascade,
+  user_id uuid references profiles(id) on delete cascade,
+  username text,
+  avatar_url text,
+  text text not null,
+  created_at timestamptz default now()
+);
+alter table comments enable row level security;
+create policy "Comentarios públicos" on comments for select using (true);
+create policy "Usuarios comentan" on comments for insert with check (auth.uid() = user_id);
+
+-- FOLLOWS restaurantes
+create table if not exists follows (
+  user_id uuid references profiles(id) on delete cascade,
+  restaurant_id bigint references restaurants(id) on delete cascade,
+  created_at timestamptz default now(),
+  primary key(user_id, restaurant_id)
+);
+alter table follows enable row level security;
+create policy "Follows públicos" on follows for select using (true);
+create policy "Usuarios siguen" on follows for insert with check (auth.uid() = user_id);
+create policy "Usuarios dejan de seguir" on follows for delete using (auth.uid() = user_id);
+
+-- MESSAGES
+create table if not exists messages (
+  id bigserial primary key,
+  from_id uuid references profiles(id) on delete cascade,
+  to_id uuid references profiles(id) on delete cascade,
+  from_username text,
+  text text not null,
+  read boolean default false,
+  created_at timestamptz default now()
+);
+alter table messages enable row level security;
+create policy "Ver mis mensajes" on messages for select using (auth.uid() = from_id or auth.uid() = to_id);
+create policy "Enviar mensajes" on messages for insert with check (auth.uid() = from_id);
+
+-- RESERVAS
+create table if not exists reservas (
+  id bigserial primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  restaurant_id bigint references restaurants(id),
+  restaurant_name text,
+  slot_id bigint references slots(id),
+  date date,
+  time time,
+  pax int,
+  notes text,
+  contact_name text,
+  contact_phone text,
+  contact_email text,
+  status text default 'confirmed',
+  created_at timestamptz default now()
+);
+alter table reservas enable row level security;
+create policy "Ver mis reservas" on reservas for select using (auth.uid() = user_id);
+create policy "Crear reservas" on reservas for insert with check (auth.uid() = user_id);
+create policy "Cancelar reservas" on reservas for update using (auth.uid() = user_id);
+
+-- REVIEWS
+create table if not exists reviews (
+  id bigserial primary key,
+  restaurant_id bigint references restaurants(id) on delete cascade,
+  user_id uuid references profiles(id) on delete cascade,
+  username text,
+  rating int check (rating >= 1 and rating <= 5),
+  text text,
+  img text,
+  created_at timestamptz default now()
+);
+alter table reviews enable row level security;
+create policy "Reviews públicas" on reviews for select using (true);
+create policy "Usuarios dejan reviews" on reviews for insert with check (auth.uid() = user_id);
+
+-- STORAGE para fotos
+insert into storage.buckets (id, name, public)
+values ('xantar-media', 'xantar-media', true)
+on conflict do nothing;
+
+create policy "Subida autenticada" on storage.objects
+for insert with check (auth.uid() is not null and bucket_id = 'xantar-media');
+
+create policy "Lectura pública" on storage.objects
+for select using (bucket_id = 'xantar-media');
+
+-- TRIGGER para actualizar rating
+create or replace function update_restaurant_rating()
+returns trigger as $$
+begin
+  update restaurants set
+    rating = (select coalesce(avg(rating),0) from reviews where restaurant_id = new.restaurant_id),
+    reviews = (select count(*) from reviews where restaurant_id = new.restaurant_id)
+  where id = new.restaurant_id;
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists on_review_insert on reviews;
+create trigger on_review_insert
+after insert on reviews
+for each row execute procedure update_restaurant_rating();
