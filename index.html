@@ -19,17 +19,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script>
-var exports = {};
-var module = {exports: {}};
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = Xantar;
-var _react = require("react");
 // Xantar v4.7
-
+const {
+  useState,
+  useEffect
+} = React;
 const _now = Date.now();
 const timeAgo = ts => {
   if (!ts) return "";
@@ -1416,7 +1410,7 @@ function LocSel({
   val,
   set
 }) {
-  const [q, setQ] = (0, _react.useState)("");
+  const [q, setQ] = useState("");
   const paises = Object.keys(PAISES).filter(p => !q || p.toLowerCase().includes(q.toLowerCase()));
   const regs = val.pais ? Object.keys(PAISES[val.pais] || {}) : [];
   const provs = val.reg ? Object.keys((PAISES[val.pais] || {})[val.reg] || {}) : [];
@@ -1520,32 +1514,32 @@ function LocSel({
 }
 function Xantar() {
   var _userProfile$posts;
-  const [tab, setTab] = (0, _react.useState)("feed");
-  const [rests, setRests] = (0, _react.useState)(RESTS_SEED);
-  const [notifs, setNotifs] = (0, _react.useState)([]);
-  const [detail, setDetail] = (0, _react.useState)(null);
-  const [prevTab, setPrevTab] = (0, _react.useState)("feed");
-  const [showF, setShowF] = (0, _react.useState)(false);
-  const [specDropOpen, setSpecDropOpen] = (0, _react.useState)(false);
-  const [showAdd, setShowAdd] = (0, _react.useState)(false);
-  const [showOwner, setShowOwner] = (0, _react.useState)(false);
-  const [showRev, setShowRev] = (0, _react.useState)(false);
-  const [showLang, setShowLang] = (0, _react.useState)(false);
-  const [showAddStory, setShowAddStory] = (0, _react.useState)(false);
-  const [myStories, setMyStories] = (0, _react.useState)([]);
-  const [viewStory, setViewStory] = (0, _react.useState)(null);
-  const [storyIdx, setStoryIdx] = (0, _react.useState)(0);
-  const [profileName, setProfileName] = (0, _react.useState)("Tu nombre");
-  const [profileUser, setProfileUser] = (0, _react.useState)("foodie_user");
-  const [profileCity, setProfileCity] = (0, _react.useState)("España 🇪🇸");
-  const [profileImg, setProfileImg] = (0, _react.useState)("https://i.pravatar.cc/80?img=3");
-  const [onboarded, setOnboarded] = (0, _react.useState)(false);
-  const [obSlide, setObSlide] = (0, _react.useState)(0);
-  const [appReady, setAppReady] = (0, _react.useState)(false);
-  const [feedPage, setFeedPage] = (0, _react.useState)(4);
-  const [showComments, setShowComments] = (0, _react.useState)(false);
-  const [activePost, setActivePost] = (0, _react.useState)(null);
-  const [comments, setComments] = (0, _react.useState)({
+  const [tab, setTab] = useState("feed");
+  const [rests, setRests] = useState(RESTS_SEED);
+  const [notifs, setNotifs] = useState([]);
+  const [detail, setDetail] = useState(null);
+  const [prevTab, setPrevTab] = useState("feed");
+  const [showF, setShowF] = useState(false);
+  const [specDropOpen, setSpecDropOpen] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showOwner, setShowOwner] = useState(false);
+  const [showRev, setShowRev] = useState(false);
+  const [showLang, setShowLang] = useState(false);
+  const [showAddStory, setShowAddStory] = useState(false);
+  const [myStories, setMyStories] = useState([]);
+  const [viewStory, setViewStory] = useState(null);
+  const [storyIdx, setStoryIdx] = useState(0);
+  const [profileName, setProfileName] = useState("Tu nombre");
+  const [profileUser, setProfileUser] = useState("foodie_user");
+  const [profileCity, setProfileCity] = useState("España 🇪🇸");
+  const [profileImg, setProfileImg] = useState("https://i.pravatar.cc/80?img=3");
+  const [onboarded, setOnboarded] = useState(false);
+  const [obSlide, setObSlide] = useState(0);
+  const [appReady, setAppReady] = useState(false);
+  const [feedPage, setFeedPage] = useState(4);
+  const [showComments, setShowComments] = useState(false);
+  const [activePost, setActivePost] = useState(null);
+  const [comments, setComments] = useState({
     1: [{
       id: 1,
       user: "galicia_wine",
@@ -1580,21 +1574,21 @@ function Xantar() {
       ts: Date.now() - 900000
     }]
   });
-  const [commentText, setCommentText] = (0, _react.useState)("");
-  const [showAuth, setShowAuth] = (0, _react.useState)(false);
-  const [authType, setAuthType] = (0, _react.useState)("user");
-  const [authMode, setAuthMode] = (0, _react.useState)("register");
-  const [showInbox, setShowInbox] = (0, _react.useState)(false);
-  const [inbox, setInbox] = (0, _react.useState)([]);
-  const [showChat, setShowChat] = (0, _react.useState)(false);
-  const [showReservaConfirm, setShowReservaConfirm] = (0, _react.useState)(false);
-  const [reservaData, setReservaData] = (0, _react.useState)(null);
-  const [chatRead, setChatRead] = (0, _react.useState)({});
-  const [chatFromList, setChatFromList] = (0, _react.useState)(false);
-  const [showEditProfile, setShowEditProfile] = (0, _react.useState)(false);
-  const [isRegistered, setIsRegistered] = (0, _react.useState)(false);
-  const [chatWith, setChatWith] = (0, _react.useState)(null); // {user, av, isRest}
-  const [chats, setChats] = (0, _react.useState)({
+  const [commentText, setCommentText] = useState("");
+  const [showAuth, setShowAuth] = useState(false);
+  const [authType, setAuthType] = useState("user");
+  const [authMode, setAuthMode] = useState("register");
+  const [showInbox, setShowInbox] = useState(false);
+  const [inbox, setInbox] = useState([]);
+  const [showChat, setShowChat] = useState(false);
+  const [showReservaConfirm, setShowReservaConfirm] = useState(false);
+  const [reservaData, setReservaData] = useState(null);
+  const [chatRead, setChatRead] = useState({});
+  const [chatFromList, setChatFromList] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [chatWith, setChatWith] = useState(null); // {user, av, isRest}
+  const [chats, setChats] = useState({
     "maria_gourmet": [{
       id: 1,
       from: "maria_gourmet",
@@ -1608,10 +1602,10 @@ function Xantar() {
       ts: Date.now() - 3600000 * 8
     }]
   });
-  const [openMail, setOpenMail] = (0, _react.useState)(null);
+  const [openMail, setOpenMail] = useState(null);
   // Auth form states
-  const [authStep, setAuthStep] = (0, _react.useState)("form");
-  const [authForm, setAuthForm] = (0, _react.useState)({
+  const [authStep, setAuthStep] = useState("form");
+  const [authForm, setAuthForm] = useState({
     nombre: "",
     email: "",
     pass: "",
@@ -1622,11 +1616,11 @@ function Xantar() {
     cif: "",
     telefono: ""
   });
-  const [authPrivacy, setAuthPrivacy] = (0, _react.useState)({
+  const [authPrivacy, setAuthPrivacy] = useState({
     ciudad: false,
     email: false
   });
-  const [authPubData, setAuthPubData] = (0, _react.useState)({
+  const [authPubData, setAuthPubData] = useState({
     spec: "Carne",
     price: "€€",
     horario: "",
@@ -1637,41 +1631,41 @@ function Xantar() {
     heroImg: "",
     maps: ""
   });
-  const [authShowPw, setAuthShowPw] = (0, _react.useState)(false);
-  const [query, setQuery] = (0, _react.useState)("");
-  const [liked, setLiked] = (0, _react.useState)({});
-  const [followed, setFollowed] = (0, _react.useState)({});
-  const [followedUsers, setFollowedUsers] = (0, _react.useState)({});
-  const [saved, setSaved] = (0, _react.useState)({});
-  const [upos, setUpos] = (0, _react.useState)(null);
-  const [geoL, setGeoL] = (0, _react.useState)(false);
-  const [toast, setToast] = (0, _react.useState)(null);
-  const [ownerOk, setOwnerOk] = (0, _react.useState)(false);
-  const [ownerIn, setOwnerIn] = (0, _react.useState)("");
-  const [ownerErr, setOwnerErr] = (0, _react.useState)(false);
-  const [oSlot, setOSlot] = (0, _react.useState)({
+  const [authShowPw, setAuthShowPw] = useState(false);
+  const [query, setQuery] = useState("");
+  const [liked, setLiked] = useState({});
+  const [followed, setFollowed] = useState({});
+  const [followedUsers, setFollowedUsers] = useState({});
+  const [saved, setSaved] = useState({});
+  const [upos, setUpos] = useState(null);
+  const [geoL, setGeoL] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [ownerOk, setOwnerOk] = useState(false);
+  const [ownerIn, setOwnerIn] = useState("");
+  const [ownerErr, setOwnerErr] = useState(false);
+  const [oSlot, setOSlot] = useState({
     date: "",
     time: "",
     pax: 2,
     notes: ""
   });
-  const [revR, setRevR] = (0, _react.useState)(4);
-  const [revT, setRevT] = (0, _react.useState)("");
-  const [revImg, setRevImg] = (0, _react.useState)("");
+  const [revR, setRevR] = useState(4);
+  const [revT, setRevT] = useState("");
+  const [revImg, setRevImg] = useState("");
   // Owner panel states
-  const [ownerStep, setOwnerStep] = (0, _react.useState)("login");
-  const [ownerEmail, setOwnerEmail] = (0, _react.useState)("");
-  const [ownerPass, setOwnerPass] = (0, _react.useState)("");
-  const [ownerLoginErr, setOwnerLoginErr] = (0, _react.useState)(false);
-  const [ownerReq, setOwnerReq] = (0, _react.useState)({
+  const [ownerStep, setOwnerStep] = useState("login");
+  const [ownerEmail, setOwnerEmail] = useState("");
+  const [ownerPass, setOwnerPass] = useState("");
+  const [ownerLoginErr, setOwnerLoginErr] = useState(false);
+  const [ownerReq, setOwnerReq] = useState({
     nombre: "",
     restaurante: "",
     telefono: "",
     email: ""
   });
-  const [ownerReqSent, setOwnerReqSent] = (0, _react.useState)(false);
-  const [ownerShowPass, setOwnerShowPass] = (0, _react.useState)(false);
-  const [filt, setFilt] = (0, _react.useState)({
+  const [ownerReqSent, setOwnerReqSent] = useState(false);
+  const [ownerShowPass, setOwnerShowPass] = useState(false);
+  const [filt, setFilt] = useState({
     specs: [],
     mich: [],
     rep: [],
@@ -1681,13 +1675,13 @@ function Xantar() {
     slots: false,
     sort: "rating"
   });
-  const [fLoc, setFLoc] = (0, _react.useState)({
+  const [fLoc, setFLoc] = useState({
     pais: "",
     reg: "",
     prov: "",
     ciudad: ""
   });
-  const [form, setForm] = (0, _react.useState)({
+  const [form, setForm] = useState({
     name: "",
     pais: "🇪🇸 España",
     reg: "",
@@ -1703,9 +1697,9 @@ function Xantar() {
     lng: "",
     platos: ""
   });
-  const [userProfile, setUserProfile] = (0, _react.useState)(null); // {user, av, posts, bio, followers}
+  const [userProfile, setUserProfile] = useState(null); // {user, av, posts, bio, followers}
 
-  (0, _react.useEffect)(() => {
+  useEffect(() => {
     // Load from storage
     (async () => {
       try {
@@ -9789,11 +9783,11 @@ function Xantar() {
 
   // ── Add Story Panel ────────────────────────────────────
   const AddStoryPanel = () => {
-    const [url, setUrl] = (0, _react.useState)("");
-    const [type, setType] = (0, _react.useState)("photo");
-    const [preview, setPreview] = (0, _react.useState)("");
-    const [err, setErr] = (0, _react.useState)(false);
-    const [stab, setStab] = (0, _react.useState)("device");
+    const [url, setUrl] = useState("");
+    const [type, setType] = useState("photo");
+    const [preview, setPreview] = useState("");
+    const [err, setErr] = useState(false);
+    const [stab, setStab] = useState("device");
     const publish = () => {
       if (!preview) {
         toast2("⚠️ Añade una foto o vídeo");
@@ -10119,7 +10113,7 @@ function Xantar() {
     const goPrev = () => {
       if (idx > 0) setStoryIdx(n => n - 1);
     };
-    (0, _react.useEffect)(() => {
+    useEffect(() => {
       if (!viewStory) return;
       const t = setTimeout(() => goNext(), 5000);
       return () => clearTimeout(t);
@@ -12420,7 +12414,7 @@ try {
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(React.createElement(Xantar));
 } catch(e) {
-  document.getElementById('root').innerHTML = '<div style="color:white;padding:20px;font-size:14px;font-family:sans-serif;">Error: ' + e.message + '</div>';
+  document.getElementById('root').innerHTML = '<div style="color:red;padding:20px;font-family:sans-serif;font-size:13px;"><b>Error:</b><br>' + e.message + '</div>';
 }
   </script>
 </body>
