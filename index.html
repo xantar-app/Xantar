@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Xantar"/>
@@ -10,17 +10,20 @@
   <title>Xantar</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body,#root{width:100%;height:100%;background:#0F0F0F;}
-    body{overflow:hidden;}
+    html,body{width:100%;height:100%;background:#0F0F0F;overflow:hidden;}
+    #root{width:100%;height:100%;}
   </style>
 </head>
 <body>
   <div id="root"></div>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script>
 // Xantar v4.7
-import { useState, useEffect } from "react";
+const {
+  useState,
+  useEffect
+} = React;
 const _now = Date.now();
 const timeAgo = ts => {
   if (!ts) return "";
@@ -1509,7 +1512,7 @@ function LocSel({
     value: c
   }, c))));
 }
-export default function Xantar() {
+function Xantar() {
   var _userProfile$posts;
   const [tab, setTab] = useState("feed");
   const [rests, setRests] = useState(RESTS_SEED);
@@ -12407,8 +12410,12 @@ export default function Xantar() {
     }
   }, toast));
 }
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(ForkStar));
+try {
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(React.createElement(Xantar));
+} catch(e) {
+  document.getElementById('root').innerHTML = '<div style="color:red;padding:20px;font-family:sans-serif;font-size:13px;background:#111;min-height:100vh;"><b>Error:</b><br>' + e.message + '<br><br><pre>' + e.stack + '</pre></div>';
+}
   </script>
 </body>
 </html>
